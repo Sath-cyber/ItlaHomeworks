@@ -1,13 +1,15 @@
-using Physio.Domain.Core;
-
-namespace Physio.Domain.Entities;
-
-public class Tratamiento : BaseEntity
+namespace Physio.Domain.Entities
 {
-    public string Nombre { get; set; } = default!;
-    public string Descripcion { get; set; } = default!;
-    public decimal Costo { get; set; }
-    public int DuracionMinutos { get; set; }
+    public class Tratamiento
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        public decimal Costo { get; set; }
+        public int DuracionMinutos { get; set; }
 
-    public ICollection<Sesion> Sesiones { get; set; } = new List<Sesion>();
+        public bool IsDeleted { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+    }
 }
