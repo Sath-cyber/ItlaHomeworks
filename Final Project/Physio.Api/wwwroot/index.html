@@ -1,0 +1,441 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Physio System - Panel principal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        :root {
+            --bg-main: #050816;
+            --bg-card: #0b1022;
+            --bg-card-soft: #11162a;
+            --accent: #4f8cff;
+            --accent-soft: rgba(79, 140, 255, 0.18);
+            --text-main: #f5f7ff;
+            --text-muted: #a0a7c3;
+            --chip-bg: rgba(15, 188, 141, 0.12);
+            --chip-border: rgba(15, 188, 141, 0.55);
+            --chip-text: #53e3b2;
+            --border-soft: rgba(255, 255, 255, 0.08);
+            --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.85);
+            --radius-lg: 18px;
+            --radius-pill: 999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top left, #1b2a5b 0, transparent 55%), radial-gradient(circle at bottom right, #171632 0, transparent 60%), var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-shell {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px 20px 32px;
+            width: 100%;
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 20%, #4f8cff, #0fb88d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+            .brand-title span:first-child {
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .brand-title span:last-child {
+                font-size: 11px;
+                color: var(--text-muted);
+            }
+
+        .header-badge {
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            background: rgba(12, 18, 40, 0.95);
+            backdrop-filter: blur(14px);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            margin-bottom: 6px;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            max-width: 620px;
+            margin-bottom: 22px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        @media (max-width: 1100px) {
+            .modules-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 720px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .module-card {
+            background: radial-gradient(circle at top left, #19244a, transparent 55%), var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 16px 16px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .module-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.04), transparent 60%);
+                opacity: 0.7;
+                pointer-events: none;
+            }
+
+        .module-card-inner {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .module-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .chip {
+            font-size: 10px;
+            padding: 4px 9px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--chip-border);
+            background: var(--chip-bg);
+            color: var(--chip-text);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .chip-purple {
+            background: rgba(158, 134, 255, 0.16);
+            border-color: rgba(158, 134, 255, 0.55);
+            color: #c3b4ff;
+        }
+
+        .chip-blue {
+            background: rgba(79, 140, 255, 0.16);
+            border-color: rgba(79, 140, 255, 0.6);
+            color: #aecdff;
+        }
+
+        .chip-orange {
+            background: rgba(255, 170, 115, 0.16);
+            border-color: rgba(255, 170, 115, 0.6);
+            color: #ffddbf;
+        }
+
+        .module-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .module-title {
+            margin-top: 6px;
+            margin-bottom: 4px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .module-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .module-list {
+            list-style: none;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+            .module-list li {
+                margin-bottom: 4px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+        .module-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 999px;
+            background: var(--accent);
+            opacity: 0.75;
+        }
+
+        .module-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .module-note {
+            font-size: 10px;
+            color: var(--text-muted);
+            max-width: 150px;
+        }
+
+        .module-btn {
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            padding: 7px 14px;
+            font-size: 12px;
+            color: var(--text-main);
+            background: radial-gradient(circle at top left, rgba(79, 140, 255, 0.18), transparent 55%);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: background 0.18s ease-out, border-color 0.18s ease-out, transform 0.12s ease-out, box-shadow 0.18s ease-out;
+        }
+
+            .module-btn span {
+                font-size: 13px;
+                transform: translateY(0.5px);
+            }
+
+            .module-btn:hover {
+                background: linear-gradient(135deg, var(--accent), #6e9dff);
+                border-color: transparent;
+                transform: translateY(-1px);
+                box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+            }
+
+        .footer {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 26px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+
+        <header class="app-header">
+            <div class="brand">
+                <div class="brand-logo">P</div>
+                <div class="brand-title">
+                    <span>Physio System</span>
+                    <span>Panel principal · Web API + front</span>
+                </div>
+            </div>
+            <div class="header-badge">
+                Proyecto final · ASP.NET Core + HTML simple
+            </div>
+        </header>
+
+        <main>
+            <h1 class="page-title">Panel principal</h1>
+            <p class="page-subtitle">
+                Bienvenido al sistema de gestion de la clinica Physio. Desde aqui puedes entrar
+                a los modulos de Pacientes, Fisioterapeutas, Tratamientos y Sesiones que creaste
+                en tu API ASP.NET Core.
+            </p>
+
+            <section class="modules-grid">
+
+                <article class="module-card">
+                    <div class="module-card-inner">
+                        <div>
+                            <div class="module-header-row">
+                                <div class="chip">CRUD completo</div>
+                                <div class="module-icon">👥</div>
+                            </div>
+                            <h2 class="module-title">Pacientes</h2>
+                            <p class="module-text">
+                                Registrar nuevos pacientes, editar datos basicos, ver la lista y realizar
+                                eliminacion logica usando la API de Pacientes.
+                            </p>
+                            <ul class="module-list">
+                                <li><span class="module-dot"></span> Nombre, apellido, telefono y edad</li>
+                                <li><span class="module-dot"></span> Validaciones con FluentValidation</li>
+                                <li><span class="module-dot"></span> Consumo directo de <code>/api/Pacientes</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="module-footer">
+                            <p class="module-note">Modulo principal que ya esta funcional.</p>
+                            <a href="pacientes.html" class="module-btn">
+                                Entrar al modulo <span>→</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <div class="module-card-inner">
+                        <div>
+                            <div class="module-header-row">
+                                <div class="chip chip-purple">Gestion de personal</div>
+                                <div class="module-icon">💪</div>
+                            </div>
+                            <h2 class="module-title">Fisioterapeutas</h2>
+                            <p class="module-text">
+                                Administrar los fisioterapeutas: nombres, telefono, especialidad y
+                                relacion con las sesiones asignadas.
+                            </p>
+                            <ul class="module-list">
+                                <li><span class="module-dot"></span> Listado de fisioterapeutas activos</li>
+                                <li><span class="module-dot"></span> Soporte para futuras validaciones</li>
+                                <li><span class="module-dot"></span> Conectado a <code>/api/Fisioterapeutas</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="module-footer">
+                            <p class="module-note">Puedes crear un modulo similar al de pacientes.</p>
+                            <a href="fisioterapeutas.html" class="module-btn">
+                                Ver modulo <span>→</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <div class="module-card-inner">
+                        <div>
+                            <div class="module-header-row">
+                                <div class="chip chip-blue">Catalogo de servicios</div>
+                                <div class="module-icon">💊</div>
+                            </div>
+                            <h2 class="module-title">Tratamientos</h2>
+                            <p class="module-text">
+                                Definir los tratamientos disponibles: nombre, descripcion, costo y
+                                duracion en minutos para usarlos en las sesiones.
+                            </p>
+                            <ul class="module-list">
+                                <li><span class="module-dot"></span> Lista de tratamientos configurables</li>
+                                <li><span class="module-dot"></span> Ideal para mostrar precios base</li>
+                                <li><span class="module-dot"></span> Conectado a <code>/api/Tratamientos</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="module-footer">
+                            <p class="module-note">Modulo opcional para enriquecer el proyecto.</p>
+                            <a href="tratamientos.html" class="module-btn">
+                                Ver modulo <span>→</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="module-card">
+                    <div class="module-card-inner">
+                        <div>
+                            <div class="module-header-row">
+                                <div class="chip chip-orange">Agenda de citas</div>
+                                <div class="module-icon">📅</div>
+                            </div>
+                            <h2 class="module-title">Sesiones</h2>
+                            <p class="module-text">
+                                Registrar las sesiones realizadas, relacionando paciente, fisioterapeuta
+                                y tratamiento, junto con fecha, hora y notas.
+                            </p>
+                            <ul class="module-list">
+                                <li><span class="module-dot"></span> Agenda basica de sesiones</li>
+                                <li><span class="module-dot"></span> Pensado para usar joins en tu API</li>
+                                <li><span class="module-dot"></span> Conectado a <code>/api/Sesiones</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="module-footer">
+                            <p class="module-note">Puedes implementarlo mas adelante como plus.</p>
+                            <a href="sesiones.html" class="module-btn">
+                                Ver modulo <span>→</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <p class="footer">
+                Physio System
+            </p>
+        </main>
+    </div>
+</body>
+</html>

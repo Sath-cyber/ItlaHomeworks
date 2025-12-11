@@ -1,0 +1,606 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Physio System - Tratamientos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+            --bg-main: #050816;
+            --bg-card: #0b1120;
+            --bg-card-soft: #111827;
+            --border-subtle: #1f2937;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.1);
+            --danger: #ef4444;
+            --danger-soft: rgba(239, 68, 68, 0.1);
+            --radius-lg: 18px;
+            --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 55%), radial-gradient(circle at bottom, rgba(59, 130, 246, 0.12), transparent 55%), var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 56px;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            backdrop-filter: blur(18px);
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.7));
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 10%, #4ade80, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #020617;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.85), 0 18px 35px rgba(22, 163, 74, 0.55);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-title {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .top-badge {
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #cbd5f5;
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .btn-ghost {
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            background: rgba(15, 23, 42, 0.85);
+            color: #e5e7eb;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .btn-ghost:hover {
+                background: rgba(31, 41, 55, 0.95);
+            }
+
+        .page {
+            max-width: 1200px;
+            width: 100%;
+            margin: 28px auto 40px;
+            padding: 0 24px 32px;
+            flex: 1;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-kicker {
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 650;
+            margin-bottom: 6px;
+        }
+
+        .page-sub {
+            font-size: 13px;
+            color: var(--text-soft);
+            max-width: 640px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr);
+            gap: 22px;
+        }
+
+        @media (max-width: 960px) {
+            .layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.06), transparent 55%), var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px 18px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(148, 163, 184, 0.26);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: var(--text-soft);
+            margin-top: 3px;
+        }
+
+        .badge-soft {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            font-size: 11px;
+            color: #cbd5f5;
+        }
+
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6);
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--text-soft);
+            margin-bottom: 3px;
+            display: inline-block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 9px 11px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card-soft);
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            max-height: 160px;
+        }
+
+            input:focus, textarea:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+            }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(to right, #2563eb, #3b82f6);
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            padding: 8px 13px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+            .btn-secondary:hover {
+                background: rgba(31, 41, 55, 0.95);
+            }
+
+        .btn-danger {
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(248, 113, 113, 0.9);
+            background: rgba(127, 29, 29, 0.85);
+            color: #fee2e2;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .table-wrapper {
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: radial-gradient(circle at top, rgba(248, 250, 252, 0.05), transparent 60%), #020617;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: #9ca3af;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        tbody tr:hover td {
+            background: rgba(30, 64, 175, 0.45);
+        }
+
+        .validation {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #fecaca;
+            background: var(--danger-soft);
+            border-radius: 10px;
+            padding: 6px 9px;
+            border: 1px solid rgba(248, 113, 113, 0.7);
+            display: none;
+        }
+
+        .helper {
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #6b7280;
+            padding: 10px 0 18px;
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-badge">P</div>
+            <div class="brand-text">
+                <div class="brand-title">Physio System</div>
+                <div class="brand-sub">Modulo de tratamientos · conectado a /api/Tratamientos</div>
+            </div>
+        </div>
+        <div class="top-actions">
+            <span class="top-badge">Proyecto final · Web API + front simple</span>
+            <button class="btn-ghost" onclick="window.location.href='index.html'">
+                ← Volver al panel
+            </button>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="page-header">
+            <div class="page-kicker">Modulo de datos</div>
+            <h1 class="page-title">Gestion de tratamientos</h1>
+            <p class="page-sub">
+                Define los tratamientos disponibles: nombre, descripcion, costo y duracion en minutos.
+                Todo se guarda usando el endpoint <code>/api/Tratamientos</code>.
+            </p>
+        </section>
+
+        <section class="layout">
+            <article class="card">
+                <header class="card-header">
+                    <div>
+                        <h2 class="card-title">Crear o editar tratamiento</h2>
+                        <p class="card-sub">
+                            Completa los datos. La validacion principal la realiza la API con FluentValidation.
+                        </p>
+                    </div>
+                    <span class="badge-soft">
+                        <span class="badge-dot"></span>
+                        Conectado
+                    </span>
+                </header>
+
+                <form id="tratamientoForm">
+                    <input type="hidden" id="tratamientoId" />
+
+                    <div class="form-grid">
+                        <div>
+                            <label for="nombre">Nombre</label>
+                            <input id="nombre" autocomplete="off" />
+                        </div>
+                        <div>
+                            <label for="descripcion">Descripcion</label>
+                            <textarea id="descripcion"></textarea>
+                        </div>
+                        <div>
+                            <label for="costo">Costo</label>
+                            <input id="costo" type="number" step="0.01" placeholder="Ej: 1500.00" />
+                        </div>
+                        <div>
+                            <label for="duracion">Duracion (minutos)</label>
+                            <input id="duracion" type="number" min="0" placeholder="Ej: 45" />
+                        </div>
+                    </div>
+
+                    <div id="validationSummary" class="validation"></div>
+
+                    <p class="helper">
+                        Tip: en la presentacion puedes usar esta pantalla para mostrar el "catalogo de servicios" de la clinica.
+                    </p>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="resetForm()">Limpiar</button>
+                        <button type="submit" class="btn-primary" id="submitBtn">Guardar tratamiento</button>
+                    </div>
+                </form>
+            </article>
+
+            <article class="card">
+                <header class="card-header">
+                    <div>
+                        <h2 class="card-title">Lista de tratamientos</h2>
+                        <p class="card-sub">
+                            Consulta los tratamientos registrados. Puedes editar o eliminar cada registro.
+                        </p>
+                    </div>
+                    <button class="btn-small" onclick="loadTratamientos()">Actualizar lista</button>
+                </header>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Costo</th>
+                                <th>Duracion (min)</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaTratamientos">
+                            <tr><td colspan="5">Cargando tratamientos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="footer">
+        Physio System
+    </footer>
+
+    <script>
+        const apiBase = "/api/Tratamientos";
+        let editingId = null;
+
+        async function loadTratamientos() {
+            const tbody = document.getElementById("tablaTratamientos");
+            tbody.innerHTML = `<tr><td colspan="5">Cargando tratamientos...</td></tr>`;
+
+            try {
+                const res = await fetch(apiBase);
+                if (!res.ok) throw new Error("Error al cargar tratamientos");
+                const data = await res.json();
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5">No hay registros aun.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                data.forEach(t => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+              <td>${t.id}</td>
+              <td>${t.nombre || ""}</td>
+              <td>${t.costo != null ? t.costo : ""}</td>
+              <td>${t.duracionMinutos != null ? t.duracionMinutos : ""}</td>
+              <td>
+                <button class="btn-small"
+                  onclick="editTratamiento(${t.id}, '${escapeText(t.nombre)}', '${escapeText(t.descripcion)}', '${t.costo ?? ""}', '${t.duracionMinutos ?? ""}')">
+                  Editar
+                </button>
+                <button class="btn-danger" onclick="deleteTratamiento(${t.id})">Eliminar</button>
+              </td>
+            `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="5">Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        function escapeText(text) {
+            if (!text) return "";
+            return String(text).replace(/'/g, "\\'");
+        }
+
+        function editTratamiento(id, nombre, descripcion, costo, duracion) {
+            editingId = id;
+            document.getElementById("tratamientoId").value = id;
+            document.getElementById("nombre").value = nombre;
+            document.getElementById("descripcion").value = descripcion;
+            document.getElementById("costo").value = costo;
+            document.getElementById("duracion").value = duracion;
+            document.getElementById("submitBtn").textContent = "Actualizar tratamiento";
+            document.getElementById("validationSummary").style.display = "none";
+        }
+
+        function resetForm() {
+            editingId = null;
+            document.getElementById("tratamientoForm").reset();
+            document.getElementById("tratamientoId").value = "";
+            document.getElementById("submitBtn").textContent = "Guardar tratamiento";
+            document.getElementById("validationSummary").style.display = "none";
+        }
+
+        document.getElementById("tratamientoForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const validation = document.getElementById("validationSummary");
+            validation.style.display = "none";
+            validation.textContent = "";
+
+            const payload = {
+                id: editingId ?? 0,
+                nombre: document.getElementById("nombre").value.trim(),
+                descripcion: document.getElementById("descripcion").value.trim(),
+                costo: parseFloat(document.getElementById("costo").value || 0),
+                duracionMinutos: parseInt(document.getElementById("duracion").value || 0, 10)
+            };
+
+            const method = editingId ? "PUT" : "POST";
+            const url = editingId ? `${apiBase}/${editingId}` : apiBase;
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.status === 400) {
+                    const problem = await res.json();
+                    const errors = problem.errors || problem;
+                    const mensajes = [];
+                    for (const key in errors) {
+                        if (Array.isArray(errors[key])) mensajes.push(...errors[key]);
+                        else mensajes.push(errors[key]);
+                    }
+                    validation.textContent = mensajes.join(" · ");
+                    validation.style.display = "block";
+                    return;
+                }
+
+                if (!res.ok) throw new Error("La API respondio con estado " + res.status);
+
+                resetForm();
+                await loadTratamientos();
+            } catch (err) {
+                validation.textContent = "Error al guardar: " + err.message;
+                validation.style.display = "block";
+            }
+        });
+
+        async function deleteTratamiento(id) {
+            if (!confirm("Seguro que deseas eliminar este tratamiento?")) return;
+
+            try {
+                const res = await fetch(`${apiBase}/${id}`, { method: "DELETE" });
+                if (!res.ok && res.status !== 204) {
+                    throw new Error("La API respondio con estado " + res.status);
+                }
+                if (editingId === id) resetForm();
+                await loadTratamientos();
+            } catch (err) {
+                alert("Error al eliminar: " + err.message);
+            }
+        }
+
+        loadTratamientos();
+    </script>
+</body>
+</html>

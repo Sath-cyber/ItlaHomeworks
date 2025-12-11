@@ -1,0 +1,654 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Physio System - Sesiones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root {
+            --bg-main: #050816;
+            --bg-card: #0b1120;
+            --bg-card-soft: #111827;
+            --border-subtle: #1f2937;
+            --text-main: #e5e7eb;
+            --text-soft: #9ca3af;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.1);
+            --danger: #ef4444;
+            --danger-soft: rgba(239, 68, 68, 0.1);
+            --radius-lg: 18px;
+            --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.22), transparent 55%), radial-gradient(circle at bottom, rgba(59, 130, 246, 0.12), transparent 55%), var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 56px;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            backdrop-filter: blur(18px);
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.7));
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 10%, #4ade80, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #020617;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.85), 0 18px 35px rgba(22, 163, 74, 0.55);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-title {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .top-badge {
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #cbd5f5;
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .btn-ghost {
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            background: rgba(15, 23, 42, 0.85);
+            color: #e5e7eb;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .btn-ghost:hover {
+                background: rgba(31, 41, 55, 0.95);
+            }
+
+        .page {
+            max-width: 1200px;
+            width: 100%;
+            margin: 28px auto 40px;
+            padding: 0 24px 32px;
+            flex: 1;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-kicker {
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 650;
+            margin-bottom: 6px;
+        }
+
+        .page-sub {
+            font-size: 13px;
+            color: var(--text-soft);
+            max-width: 640px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr);
+            gap: 22px;
+        }
+
+        @media (max-width: 960px) {
+            .layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, rgba(248, 250, 252, 0.06), transparent 55%), var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px 18px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(148, 163, 184, 0.26);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: var(--text-soft);
+            margin-top: 3px;
+        }
+
+        .badge-soft {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            font-size: 11px;
+            color: #cbd5f5;
+        }
+
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6);
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--text-soft);
+            margin-bottom: 3px;
+            display: inline-block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 9px 11px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card-soft);
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            max-height: 160px;
+        }
+
+            input:focus, textarea:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+            }
+
+        .form-row-inline {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row-inline {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(to right, #2563eb, #3b82f6);
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            padding: 8px 13px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+            .btn-secondary:hover {
+                background: rgba(31, 41, 55, 0.95);
+            }
+
+        .btn-danger {
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(248, 113, 113, 0.9);
+            background: rgba(127, 29, 29, 0.85);
+            color: #fee2e2;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .table-wrapper {
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: radial-gradient(circle at top, rgba(248, 250, 252, 0.05), transparent 60%), #020617;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: #9ca3af;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        tbody tr:hover td {
+            background: rgba(30, 64, 175, 0.45);
+        }
+
+        .validation {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #fecaca;
+            background: var(--danger-soft);
+            border-radius: 10px;
+            padding: 6px 9px;
+            border: 1px solid rgba(248, 113, 113, 0.7);
+            display: none;
+        }
+
+        .helper {
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #6b7280;
+            padding: 10px 0 18px;
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-badge">P</div>
+            <div class="brand-text">
+                <div class="brand-title">Physio System</div>
+                <div class="brand-sub">Modulo de sesiones · conectado a /api/Sesiones</div>
+            </div>
+        </div>
+        <div class="top-actions">
+            <span class="top-badge">Proyecto final</span>
+            <button class="btn-ghost" onclick="window.location.href='index.html'">
+                ← Volver al panel
+            </button>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="page-header">
+            <div class="page-kicker">Modulo de datos</div>
+            <h1 class="page-title">Gestion de sesiones</h1>
+            <p class="page-sub">
+                Registra las sesiones realizadas, relacionando paciente, fisioterapeuta y tratamiento,
+                junto con fecha y notas. Este modulo usa el endpoint <code>/api/Sesiones</code>.
+            </p>
+        </section>
+
+        <section class="layout">
+            <article class="card">
+                <header class="card-header">
+                    <div>
+                        <h2 class="card-title">Crear o editar sesion</h2>
+                        <p class="card-sub">
+                            Completa los datos basicos de la sesion. La API se encarga de validar las reglas.
+                        </p>
+                    </div>
+                    <span class="badge-soft">
+                        <span class="badge-dot"></span>
+                        Conectado
+                    </span>
+                </header>
+
+                <form id="sesionForm">
+                    <input type="hidden" id="sesionId" />
+
+                    <div class="form-grid">
+                        <div class="form-row-inline">
+                            <div>
+                                <label for="pacienteId">Paciente ID</label>
+                                <input id="pacienteId" type="number" min="1" placeholder="Ej: 1" />
+                            </div>
+                            <div>
+                                <label for="fisioterapeutaId">Fisioterapeuta ID</label>
+                                <input id="fisioterapeutaId" type="number" min="1" placeholder="Ej: 1" />
+                            </div>
+                            <div>
+                                <label for="tratamientoId">Tratamiento ID</label>
+                                <input id="tratamientoId" type="number" min="1" placeholder="Ej: 1" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="fechaHora">Fecha y hora</label>
+                            <input id="fechaHora" type="datetime-local" />
+                        </div>
+                        <div>
+                            <label for="notas">Notas</label>
+                            <textarea id="notas" placeholder="Opcional: breve descripcion de la sesion"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="validationSummary" class="validation"></div>
+
+                    <p class="helper">
+                        Si quisieras mejorar este modulo a futuro, podrias cambiar los IDs por listas desplegables
+                        con los nombres reales de pacientes y fisioterapeutas.
+                    </p>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="resetForm()">Limpiar</button>
+                        <button type="submit" class="btn-primary" id="submitBtn">Guardar sesion</button>
+                    </div>
+                </form>
+            </article>
+
+            <article class="card">
+                <header class="card-header">
+                    <div>
+                        <h2 class="card-title">Lista de sesiones</h2>
+                        <p class="card-sub">
+                            Consulta las sesiones registradas. Los IDs se pueden relacionar con las otras tablas
+                            en tu API o base de datos.
+                        </p>
+                    </div>
+                    <button class="btn-small" onclick="loadSesiones()">Actualizar lista</button>
+                </header>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Paciente</th>
+                                <th>Fisio</th>
+                                <th>Tratamiento</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaSesiones">
+                            <tr><td colspan="6">Cargando sesiones...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="footer">
+        Physio System · Demo de arquitectura por capas con Web API y front simple
+    </footer>
+
+    <script>
+        const apiBase = "/api/Sesiones";
+        let editingId = null;
+
+        async function loadSesiones() {
+            const tbody = document.getElementById("tablaSesiones");
+            tbody.innerHTML = `<tr><td colspan="6">Cargando sesiones...</td></tr>`;
+
+            try {
+                const res = await fetch(apiBase);
+                if (!res.ok) throw new Error("Error al cargar sesiones");
+                const data = await res.json();
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6">No hay registros aun.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                data.forEach(s => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+              <td>${s.id}</td>
+              <td>${s.pacienteId ?? ""}</td>
+              <td>${s.fisioterapeutaId ?? ""}</td>
+              <td>${s.tratamientoId ?? ""}</td>
+              <td>${formatFecha(s.fechaHora)}</td>
+              <td>
+                <button class="btn-small"
+                  onclick="editSesion(${s.id},
+                     '${s.pacienteId ?? ""}',
+                     '${s.fisioterapeutaId ?? ""}',
+                     '${s.tratamientoId ?? ""}',
+                     '${s.fechaHora ?? ""}',
+                     '${escapeText(s.notas ?? "")}')">
+                  Editar
+                </button>
+                <button class="btn-danger" onclick="deleteSesion(${s.id})">Eliminar</button>
+              </td>
+            `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        function formatFecha(valor) {
+            if (!valor) return "";
+            try {
+                const d = new Date(valor);
+                if (isNaN(d.getTime())) return valor;
+                return d.toLocaleString();
+            } catch {
+                return valor;
+            }
+        }
+
+        function escapeText(text) {
+            if (!text) return "";
+            return String(text).replace(/'/g, "\\'");
+        }
+
+        function editSesion(id, pacienteId, fisioId, tratamientoId, fechaHora, notas) {
+            editingId = id;
+            document.getElementById("sesionId").value = id;
+            document.getElementById("pacienteId").value = pacienteId;
+            document.getElementById("fisioterapeutaId").value = fisioId;
+            document.getElementById("tratamientoId").value = tratamientoId;
+
+            if (fechaHora && fechaHora.length >= 16) {
+                const trimmed = fechaHora.substring(0, 16);
+                document.getElementById("fechaHora").value = trimmed;
+            } else {
+                document.getElementById("fechaHora").value = fechaHora;
+            }
+
+            document.getElementById("notas").value = notas;
+            document.getElementById("submitBtn").textContent = "Actualizar sesion";
+            document.getElementById("validationSummary").style.display = "none";
+        }
+
+        function resetForm() {
+            editingId = null;
+            document.getElementById("sesionForm").reset();
+            document.getElementById("sesionId").value = "";
+            document.getElementById("submitBtn").textContent = "Guardar sesion";
+            document.getElementById("validationSummary").style.display = "none";
+        }
+
+        document.getElementById("sesionForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const validation = document.getElementById("validationSummary");
+            validation.style.display = "none";
+            validation.textContent = "";
+
+            const payload = {
+                id: editingId ?? 0,
+                pacienteId: parseInt(document.getElementById("pacienteId").value || 0, 10),
+                fisioterapeutaId: parseInt(document.getElementById("fisioterapeutaId").value || 0, 10),
+                tratamientoId: parseInt(document.getElementById("tratamientoId").value || 0, 10),
+                fechaHora: document.getElementById("fechaHora").value || null,
+                notas: document.getElementById("notas").value.trim()
+            };
+
+            const method = editingId ? "PUT" : "POST";
+            const url = editingId ? `${apiBase}/${editingId}` : apiBase;
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.status === 400) {
+                    const problem = await res.json();
+                    const errors = problem.errors || problem;
+                    const mensajes = [];
+                    for (const key in errors) {
+                        if (Array.isArray(errors[key])) mensajes.push(...errors[key]);
+                        else mensajes.push(errors[key]);
+                    }
+                    validation.textContent = mensajes.join(" · ");
+                    validation.style.display = "block";
+                    return;
+                }
+
+                if (!res.ok) throw new Error("La API respondio con estado " + res.status);
+
+                resetForm();
+                await loadSesiones();
+            } catch (err) {
+                validation.textContent = "Error al guardar: " + err.message;
+                validation.style.display = "block";
+            }
+        });
+
+        async function deleteSesion(id) {
+            if (!confirm("Seguro que deseas eliminar esta sesion?")) return;
+
+            try {
+                const res = await fetch(`${apiBase}/${id}`, { method: "DELETE" });
+                if (!res.ok && res.status !== 204) {
+                    throw new Error("La API respondio con estado " + res.status);
+                }
+                if (editingId === id) resetForm();
+                await loadSesiones();
+            } catch (err) {
+                alert("Error al eliminar: " + err.message);
+            }
+        }
+
+        loadSesiones();
+    </script>
+</body>
+</html>
